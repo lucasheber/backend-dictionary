@@ -24,7 +24,7 @@ Route::post('/auth/signin', [AuthController::class, 'signin']);
 | Authenticated Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/user', fn(Request $request) => $request->user())->middleware('auth:sanctum');
+Route::get('/user/me', fn(Request $request) => $request->user())->middleware('auth:sanctum');
 
 // grouping routes with the auth:sanctum middleware
 Route::controller(DictionaryController::class)->middleware('auth:sanctum')->group(function () {
