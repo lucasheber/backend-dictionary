@@ -15,5 +15,15 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (Throwable $e, Illuminate\Http\Request $request) {
+            if ($request->is('api/*')) {
+                $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+    
+                return response()->json([
+                    'message' => $e->getMessage(),
+                ], $status);
+            }
+    
+            return null; // fallback to default render
+        });
     })->create();
