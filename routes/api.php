@@ -34,4 +34,16 @@ Route::controller(DictionaryController::class)->middleware('auth:sanctum')->grou
 
     // [GET] /entries/en/{word}
     Route::get('/entries/{lang}/{word}',  'show')->name('dictionary.show');
+
+    // [POST] /entries/en/:word/favorite
+    Route::post('/entries/{lang}/{word}/favorite', 'favorite')->name('dictionary.favorite');
+
+    // [DELETE] /entries/en/:word/favorite
+    Route::delete('/entries/{lang}/{word}/favorite', 'unfavorite')->name('dictionary.unfavorite');
+
+    // [GET] /user/me/favorites
+    Route::get('/user/me/favorites', 'favorites')->name('dictionary.favorites');
+
+    // [GET] /user/me/history
+    // Route::get('/user/me/history', 'history')->name('dictionary.history');
 });
