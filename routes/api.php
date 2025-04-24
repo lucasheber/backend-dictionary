@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return response()->json(['message' => 'Fullstack Challenge 🏅 - Dictionary']);
-})->name('auth.index');
+Route::get('/', fn() => response()
+    ->json(['message' => 'Fullstack Challenge 🏅 - Dictionary']))
+    ->name('auth.index');
 
 Route::get('/login', fn() => response()->json(['message' => 'Login']))->name('login');
 Route::post('/auth/signup', [AuthController::class, 'signup']);
@@ -33,7 +33,7 @@ Route::controller(DictionaryController::class)->middleware('auth:sanctum')->grou
     Route::get('/entries/{lang}', 'index')->name('dictionary.index');
 
     // [GET] /entries/en/{word}
-    Route::get('/entries/{lang}/{word}',  'show')->name('dictionary.show');
+    Route::get('/entries/{lang}/{word}', 'show')->name('dictionary.show');
 
     // [POST] /entries/en/:word/favorite
     Route::post('/entries/{lang}/{word}/favorite', 'favorite')->name('dictionary.favorite');
