@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dictionary;
+use App\Services\WordsApiService;
 use Illuminate\Http\Request;
 
 class DictionaryController extends Controller
 {
+    protected $wordsApi;
+
+    public function __construct(WordsApiService $wordsApi)
+    {
+        $this->wordsApi = $wordsApi;
+    }
+
     /**
      * Display a listing of the words in the dictionary.
      * 
@@ -65,21 +73,8 @@ class DictionaryController extends Controller
      */
     public function show(string $lang, string $word)
     {
-        $dictionary = Dictionary::where('word', mb_convert_case($word, MB_CASE_LOWER))
-            ->where('lang', $lang)
-            ->first();
-
-        // Check if the word exists in the dictionary
-        if (!$dictionary) {
-            return response()->json(['error' => 'Word not found'], 404);
-        }
-
-        // Return the word and its definition
-        return response()->json([
-            'word' => $dictionary->word,
-            'definition' => $dictionary->definition,
-            'lang' => $dictionary->lang,
-        ]);
+        $data = $this->wordsApi->getWordData($word);
+        return response()->json($data);
     }
 
     /**
