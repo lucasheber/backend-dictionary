@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'wordsapi' => [
+        'key' => env('WORDS_API_KEY'),
+        'api_url' => env('WORDS_API_URL'),
+    ],
+
 ];
