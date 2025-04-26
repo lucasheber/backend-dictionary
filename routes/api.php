@@ -45,5 +45,5 @@ Route::controller(DictionaryController::class)->middleware('auth:sanctum')->grou
     Route::get('/user/me/favorites', 'favorites')->name('dictionary.favorites');
 
     // [GET] /user/me/history
-    // Route::get('/user/me/history', 'history')->name('dictionary.history');
+    Route::get('/user/me/history', 'history')->name('dictionary.history');
 });

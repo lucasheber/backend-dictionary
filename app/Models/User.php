@@ -44,4 +44,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(FavoriteWord::class, 'user_id');
     }
+
+    /**
+     * History words that belong to the user.
+     */
+    public function historyWords(): HasMany
+    {
+        return $this->hasMany(HistoryWord::class, 'user_id');
+    }
 }

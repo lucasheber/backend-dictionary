@@ -73,6 +73,12 @@ class DictionaryController extends Controller
      */
     public function show(string $lang, string $word)
     {
+        // save the word to the user's history
+        request()->user()->historyWords()->updateOrCreate(
+            ['word' => mb_convert_case($word, MB_CASE_LOWER)],
+            ['user_id' => request()->user()->id]
+        );
+
         $data = $this->wordsApi->getWordData($word);
         return response()->json($data);
     }
@@ -154,6 +160,27 @@ class DictionaryController extends Controller
             return [
                 'word' => $favorite->dictionary->word,
                 'added' => $favorite->created_at,
+            ];
+        });
+
+        return response()->json($results);
+    }
+
+    /**
+     * Display the user's history words.
+     */
+    public function history(Request $request)
+    {
+        $user = $request->user();
+
+        // Get the user's history words
+        $history = $user->historyWords()->get();
+
+        // Map the results to include only the word and its definition
+        $results = $history->map(function ($historyWord) {
+            return [
+                'word' => $historyWord->word,
+                'added' => $historyWord->created_at,
             ];
         });
 
