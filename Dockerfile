@@ -20,8 +20,20 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy application files
 COPY . /var/www/html
 
+# Create database.sqlite
+RUN touch /var/www/html/database/database.sqlite
+
 # Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader
+
+# Run laravel setup
+RUN php artisan key:generate
+RUN PHP artisan l5-swagger:generate
+RUN php artisan migrate
+
+RUN php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
