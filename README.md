@@ -45,7 +45,7 @@ docker-compose exec app bash
 Inside the container, execute:
 
 ```bash
-php artisan importWords
+php artisan app:import-words
 ```
 
 ---
