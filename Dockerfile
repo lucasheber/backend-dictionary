@@ -6,10 +6,11 @@ WORKDIR /var/www/html
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libsqlite3-dev \
+    postgresql-client \
+    libpq-dev \
     zip \
     unzip \
-    && docker-php-ext-install pdo pdo_sqlite
+    && docker-php-ext-install pdo pdo_pgsql
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
@@ -20,8 +21,6 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy application files
 COPY . /var/www/html
 
-# Create database.sqlite
-RUN touch /var/www/html/database/database.sqlite
 
 # Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader
@@ -29,7 +28,7 @@ RUN composer install --no-dev --optimize-autoloader
 # Run laravel setup
 RUN php artisan key:generate
 RUN php artisan l5-swagger:generate
-RUN php artisan migrate
+# RUN php artisan migrate
 
 RUN php artisan config:cache \
     && php artisan route:cache \
@@ -44,6 +43,3 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available
 
 # Expose port 8000
 EXPOSE 8000
-
-# Start the server
-CMD ["apache2-foreground"]
