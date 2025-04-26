@@ -17,10 +17,11 @@ class DictionaryController extends Controller
 
     /**
      * Display a listing of the words in the dictionary.
-     * 
+     *
      */
     public function index(Request $request, string $lang)
     {
+        $startTime = microtime(true);
 
         // Validate the language parameter
         if ($lang !== 'en') {
@@ -35,6 +36,16 @@ class DictionaryController extends Controller
         // Validate the limit and page parameters
         if ($limit < 1 || $page < 1) {
             return response()->json(['error' => 'Invalid limit or page number'], 400);
+        }
+
+        // Caching the dictionary words
+        $cacheKey = "dictionary_words_{$lang}_{$search}_{$limit}_{$page}";
+        $cachedResults = cache()->get($cacheKey);
+        if ($cachedResults) {
+            $duration = (microtime(true) - $startTime) * 1000;
+            $cachedResults['x-cache'] = 'HIT';
+            $cachedResults['x-response-time'] = round($duration, 2) . 'ms';
+            return response()->json($cachedResults);
         }
 
         $totalDocs = Dictionary::where('lang', $lang)
@@ -58,13 +69,20 @@ class DictionaryController extends Controller
         $hasPrev = $page > 1;
 
         $response = [
-            'results' => array_map(fn($item) => $item['word'], $results->toArray()),
+            'results' => array_map(fn ($item) => $item['word'], $results->toArray()),
             'totalDocs' => $totalDocs,
             'page' => $page,
             'totalPages' => $totalPages,
             'hasNext' => $hasNext,
             'hasPrev' => $hasPrev,
         ];
+
+        // Cache the results for 60 minutes and add the headers
+        cache()->put($cacheKey, $response, 60);
+        $duration = (microtime(true) - $startTime) * 1000;
+        $response['x-cache'] = 'MISS';
+        $response['x-response-time'] = round($duration, 2) . 'ms';
+
         return response()->json($response);
     }
 
