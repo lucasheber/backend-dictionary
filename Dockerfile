@@ -28,7 +28,7 @@ RUN composer install --no-dev --optimize-autoloader
 
 # Run laravel setup
 RUN php artisan key:generate
-RUN PHP artisan l5-swagger:generate
+RUN php artisan l5-swagger:generate
 RUN php artisan migrate
 
 RUN php artisan config:cache \
