@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DictionaryController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,10 +21,11 @@ Route::post('/auth/signin', [AuthController::class, 'signin']);
 
 /*
 |--------------------------------------------------------------------------
-| Authenticated Routes
+| Auuthenticated Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/user/me', fn(Request $request) => $request->user())->middleware('auth:sanctum');
+
+Route::get('/user/me', [UserController::class, 'me'])->middleware('auth:sanctum');
 
 // grouping routes with the auth:sanctum middleware
 Route::controller(DictionaryController::class)->middleware('auth:sanctum')->group(function () {
