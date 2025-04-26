@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+// redirect to the API documentation
 Route::get('/', function () {
-    return view('welcome');
+   return redirect(config('app.api_docs_url'));
 });
