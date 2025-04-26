@@ -6,6 +6,17 @@ use App\Models\Dictionary;
 use App\Services\WordsApiService;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Info(
+ *     title="Dictionary API",
+ *     version="1.0.0",
+ *     description="API for managing dictionary words and user favorites.",
+ *     @OA\Contact(
+ *         name="API Support",
+ *         email="lucas.heber07@gmailcom",
+ *     )
+ * )
+ */
 class DictionaryController extends Controller
 {
     protected $wordsApi;
@@ -15,10 +26,128 @@ class DictionaryController extends Controller
         $this->wordsApi = $wordsApi;
     }
 
-    /**
-     * Display a listing of the words in the dictionary.
-     *
-     */
+   /**
+    * @OA\Get(
+    *     path="/entries/{lang}",
+    *     summary="Get dictionary words",
+    *     description="Get a list of dictionary words with optional search, limit, and page parameters. The unique language available is 'en'.",
+    *     operationId="getDictionaryWords",
+    *     tags={"Dictionary"},
+    *     security={{"sanctum":{}}},
+    *     @OA\Parameter(
+    *         name="lang",
+    *         in="path",
+    *         required=true,
+    *         description="Language code (e.g., 'en' for English)",
+    *         @OA\Schema(
+    *             type="string",
+    *             example="en"
+    *         )
+    *     ),
+    *     @OA\Parameter(
+    *         name="search",
+    *         in="query",
+    *         required=false,
+    *         description="Search term to filter words",
+    *         @OA\Schema(
+    *             type="string",
+    *             example="example"
+    *         )
+    *     ),
+    *     @OA\Parameter(
+    *         name="limit",
+    *         in="query",
+    *         required=false,
+    *         description="Number of results per page",
+    *         @OA\Schema(
+    *             type="integer",
+    *             example=50
+    *         )
+    *     ),
+    *     @OA\Parameter(
+    *         name="page",
+    *         in="query",
+    *         required=false,
+    *         description="Page number for pagination",
+    *         @OA\Schema(
+    *             type="integer",
+    *             example=1
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Successful response",
+    *         @OA\JsonContent(
+    *             @OA\Property(
+    *                 property="results",
+    *                 type="array",
+    *                 @OA\Items(
+    *                     type="string",
+    *                     example="example"
+    *                 )
+    *             ),
+    *             @OA\Property(
+    *                 property="totalDocs",
+    *                 type="integer",
+    *                 example=100
+    *             ),
+    *             @OA\Property(
+    *                 property="page",
+    *                 type="integer",
+    *                 example=1
+    *             ),
+    *             @OA\Property(
+    *                 property="totalPages",
+    *                 type="integer",
+    *                 example=10
+    *             ),
+    *             @OA\Property(
+    *                 property="hasNext",
+    *                 type="boolean",
+    *                 example=true
+    *             ),
+    *             @OA\Property(
+    *                 property="hasPrev",
+    *                 type="boolean",
+    *                 example=false
+    *             ),
+    *             @OA\Property(
+    *                 property="x-cache",
+    *                 type="string",
+    *                 example="MISS"
+    *             ),
+    *             @OA\Property(
+    *                 property="x-response-time",
+    *                 type="string",
+    *                 example="123.45ms"
+    *             )
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Invalid request parameters",
+    *         @OA\JsonContent(
+    *             @OA\Property(
+    *                 property="error",
+    *                 type="string",
+    *                 example="Invalid language"
+    *             )
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Resource not found",
+    *         @OA\JsonContent(
+    *             @OA\Property(
+    *                 property="error",
+    *                 type="string",
+    *                 example="Word not found"
+    *             )
+    *         )
+    *     )
+    * )
+    *
+    */
     public function index(Request $request, string $lang)
     {
         $startTime = microtime(true);
@@ -87,8 +216,49 @@ class DictionaryController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
+     * @OA\Get(
+     *     path="/entries/{lang}/{word}",
+     *     summary="Get word data",
+     *     description="Retrieve detailed information about a specific word.",
+     *     operationId="getWordData",
+     *     tags={"Dictionary"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="lang",
+     *         in="path",
+     *         required=true,
+     *         description="Language code (e.g., 'en' for English)",
+     *         @OA\Schema(
+     *             type="string",
+     *             example="en"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="word",
+     *         in="path",
+     *         required=true,
+     *         description="Word to retrieve data for",
+     *         @OA\Schema(
+     *             type="string",
+     *             example="example"
+     *         )
+     *     ),
+     *    @OA\Response(
+     *        response=200,
+     *       description="Successful response",
+     *       @OA\JsonContent(
+     *           @OA\Property(property="word", type="string", example="example"),
+     *          @OA\Property(property="definition", type="string", example="A representative form or pattern"),
+     *          @OA\Property(property="examples", type="array",
+     *               @OA\Items(
+     *                  type="string",
+     *                 example="This is an example sentence."
+     *                )
+     *           ),
+     *      ),
+     *  )
+     * )
+    */
     public function show(string $lang, string $word)
     {
         // save the word to the user's history
@@ -102,7 +272,21 @@ class DictionaryController extends Controller
     }
 
     /**
-     * Favorite a word.
+     * @OA\Post(
+     *     path="/entries/{lang}/{word}/favorite",
+     *     summary="Favorite a word",
+     *     description="Add a word to the user's favorites.",
+     *     operationId="favoriteWord",
+     *     tags={"Dictionary"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Word favorited successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Word favorited successfully")
+     *         )
+     *     ),
+     * )
      */
     public function favorite(Request $request, string $lang, string $word)
     {
@@ -134,8 +318,49 @@ class DictionaryController extends Controller
     }
 
     /**
-     * Unfavorite a word.
-     */
+     * @OA\Delete(
+     *     path="/entries/{lang}/{word}/favorite",
+     *     summary="Unfavorite a word",
+     *     description="Remove a word from the user's favorites.",
+     *     operationId="unfavoriteWord",
+     *     tags={"Dictionary"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="lang",
+     *         in="path",
+     *         required=true,
+     *         description="Language code (e.g., 'en' for English)",
+     *         @OA\Schema(
+     *             type="string",
+     *             example="en"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="word",
+     *         in="path",
+     *         required=true,
+     *         description="Word to unfavorite",
+     *         @OA\Schema(
+     *             type="string",
+     *             example="example"
+     *         )
+     *     ),
+     *    @OA\Response(
+     *       response=200,
+     *      description="Word unfavorited successfully",
+     *     @OA\JsonContent(
+     *          @OA\Property(property="message", type="string", example="Word unfavorited successfully")
+     *        )
+     *     ),
+     *    @OA\Response(
+     *        response=404,
+     *       description="Word not found",
+     *      @OA\JsonContent(
+     *           @OA\Property(property="error", type="string", example="Word not found")
+     *        )
+     *    ),
+     * )
+    */
     public function unfavorite(Request $request, string $lang, string $word)
     {
         $dictionary = Dictionary::where('word', mb_convert_case($word, MB_CASE_LOWER))
@@ -164,7 +389,25 @@ class DictionaryController extends Controller
     }
 
     /**
-     * Display the user's favorite words.
+     * @OA\Get(
+     *     path="/user/me/favorites",
+     *     summary="Get user's favorite words",
+     *     description="Retrieve the user's favorite words.",
+     *     operationId="getUserFavoriteWords",
+     *     tags={"User"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="word", type="string", example="example"),
+     *                 @OA\Property(property="added", type="string", format="date-time", example="2023-10-01T12:00:00Z")
+     *             )
+     *         )
+     *     ),
+     * )
      */
     public function favorites(Request $request)
     {
@@ -185,7 +428,25 @@ class DictionaryController extends Controller
     }
 
     /**
-     * Display the user's history words.
+     * @OA\Get(
+     *     path="/user/me/history",
+     *     summary="Get user's history words",
+     *     description="Retrieve the user's history words.",
+     *     operationId="getUserHistoryWords",
+     *     tags={"User"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="word", type="string", example="example"),
+     *                 @OA\Property(property="added", type="string", format="date-time", example="2023-10-01T12:00:00Z")
+     *             )
+     *         )
+     *     ),
+     * )
      */
     public function history(Request $request)
     {
