@@ -20,6 +20,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy application files
 COPY . /var/www/html
 
+# Install Composer dependencies
+RUN composer install --no-dev --optimize-autoloader
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
@@ -30,5 +33,5 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available
 # Expose port 8000
 EXPOSE 8000
 
-# Start the server  on port 8000
+# Start the server
 CMD ["apache2-foreground"]
