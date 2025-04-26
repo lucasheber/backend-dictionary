@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/user/me",
+     *     path="/user/me",
      *     summary="Get current authenticated user",
      *     tags={"User"},
-     *     security={{"bearerAuth":{}}},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful user details",

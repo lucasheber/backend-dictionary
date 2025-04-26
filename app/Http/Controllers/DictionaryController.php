@@ -26,128 +26,128 @@ class DictionaryController extends Controller
         $this->wordsApi = $wordsApi;
     }
 
-   /**
-    * @OA\Get(
-    *     path="/entries/{lang}",
-    *     summary="Get dictionary words",
-    *     description="Get a list of dictionary words with optional search, limit, and page parameters. The unique language available is 'en'.",
-    *     operationId="getDictionaryWords",
-    *     tags={"Dictionary"},
-    *     security={{"sanctum":{}}},
-    *     @OA\Parameter(
-    *         name="lang",
-    *         in="path",
-    *         required=true,
-    *         description="Language code (e.g., 'en' for English)",
-    *         @OA\Schema(
-    *             type="string",
-    *             example="en"
-    *         )
-    *     ),
-    *     @OA\Parameter(
-    *         name="search",
-    *         in="query",
-    *         required=false,
-    *         description="Search term to filter words",
-    *         @OA\Schema(
-    *             type="string",
-    *             example="example"
-    *         )
-    *     ),
-    *     @OA\Parameter(
-    *         name="limit",
-    *         in="query",
-    *         required=false,
-    *         description="Number of results per page",
-    *         @OA\Schema(
-    *             type="integer",
-    *             example=50
-    *         )
-    *     ),
-    *     @OA\Parameter(
-    *         name="page",
-    *         in="query",
-    *         required=false,
-    *         description="Page number for pagination",
-    *         @OA\Schema(
-    *             type="integer",
-    *             example=1
-    *         )
-    *     ),
-    *     @OA\Response(
-    *         response=200,
-    *         description="Successful response",
-    *         @OA\JsonContent(
-    *             @OA\Property(
-    *                 property="results",
-    *                 type="array",
-    *                 @OA\Items(
-    *                     type="string",
-    *                     example="example"
-    *                 )
-    *             ),
-    *             @OA\Property(
-    *                 property="totalDocs",
-    *                 type="integer",
-    *                 example=100
-    *             ),
-    *             @OA\Property(
-    *                 property="page",
-    *                 type="integer",
-    *                 example=1
-    *             ),
-    *             @OA\Property(
-    *                 property="totalPages",
-    *                 type="integer",
-    *                 example=10
-    *             ),
-    *             @OA\Property(
-    *                 property="hasNext",
-    *                 type="boolean",
-    *                 example=true
-    *             ),
-    *             @OA\Property(
-    *                 property="hasPrev",
-    *                 type="boolean",
-    *                 example=false
-    *             ),
-    *             @OA\Property(
-    *                 property="x-cache",
-    *                 type="string",
-    *                 example="MISS"
-    *             ),
-    *             @OA\Property(
-    *                 property="x-response-time",
-    *                 type="string",
-    *                 example="123.45ms"
-    *             )
-    *         )
-    *     ),
-    *     @OA\Response(
-    *         response=400,
-    *         description="Invalid request parameters",
-    *         @OA\JsonContent(
-    *             @OA\Property(
-    *                 property="error",
-    *                 type="string",
-    *                 example="Invalid language"
-    *             )
-    *         )
-    *     ),
-    *     @OA\Response(
-    *         response=404,
-    *         description="Resource not found",
-    *         @OA\JsonContent(
-    *             @OA\Property(
-    *                 property="error",
-    *                 type="string",
-    *                 example="Word not found"
-    *             )
-    *         )
-    *     )
-    * )
-    *
-    */
+    /**
+     * @OA\Get(
+     *     path="/entries/{lang}",
+     *     summary="Get dictionary words",
+     *     description="Get a list of dictionary words with optional search, limit, and page parameters. The unique language available is 'en'.",
+     *     operationId="getDictionaryWords",
+     *     tags={"Dictionary"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="lang",
+     *         in="path",
+     *         required=true,
+     *         description="Language code (e.g., 'en' for English)",
+     *         @OA\Schema(
+     *             type="string",
+     *             example="en"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         required=false,
+     *         description="Search term to filter words",
+     *         @OA\Schema(
+     *             type="string",
+     *             example="example"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         required=false,
+     *         description="Number of results per page",
+     *         @OA\Schema(
+     *             type="integer",
+     *             example=50
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         required=false,
+     *         description="Page number for pagination",
+     *         @OA\Schema(
+     *             type="integer",
+     *             example=1
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="results",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="string",
+     *                     example="example"
+     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="totalDocs",
+     *                 type="integer",
+     *                 example=100
+     *             ),
+     *             @OA\Property(
+     *                 property="page",
+     *                 type="integer",
+     *                 example=1
+     *             ),
+     *             @OA\Property(
+     *                 property="totalPages",
+     *                 type="integer",
+     *                 example=10
+     *             ),
+     *             @OA\Property(
+     *                 property="hasNext",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="hasPrev",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="x-cache",
+     *                 type="string",
+     *                 example="MISS"
+     *             ),
+     *             @OA\Property(
+     *                 property="x-response-time",
+     *                 type="string",
+     *                 example="123.45ms"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request parameters",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="Invalid language"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Resource not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="Word not found"
+     *             )
+     *         )
+     *     )
+     * )
+     *
+     */
     public function index(Request $request, string $lang)
     {
         $startTime = microtime(true);
@@ -279,6 +279,27 @@ class DictionaryController extends Controller
      *     operationId="favoriteWord",
      *     tags={"Dictionary"},
      *     security={{"sanctum":{}}},
+     *      @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          description="Language code (e.g., 'en' for English)",
+     *         @OA\Schema(
+     *            type="string",
+     *           example="en"
+     *        )
+     *    ),
+     *    @OA\Parameter(
+     *        name="word",
+     *       in="path",
+     *       required=true,
+     *       description="Word to favorite",
+     *       @OA\Schema(
+     *        type="string",
+     *        example="example"
+     *      )
+     *   ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Word favorited successfully",
